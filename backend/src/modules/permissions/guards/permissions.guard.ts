@@ -13,6 +13,7 @@ import {
   RequiredPermission,
 } from '../decorators/permissions.decorator';
 import { SKIP_PERMISSIONS_KEY } from '../decorators/skip-permissions.decorator';
+import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
 import {
   PermissionEffect,
   PermissionResourceTarget,
@@ -36,12 +37,23 @@ export class PermissionsGuard implements CanActivate {
   private readonly logger = new Logger(PermissionsGuard.name);
 
   constructor(
-    private readonly permissionsService: PermissionsService,
     private readonly reflector: Reflector,
+    private readonly permissionsService: PermissionsService,
     private readonly auditLogService: AuditLogService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    // Check if route is marked as public
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      this.logger.log('Public route, skipping permission check');
+      return true;
+    }
+
     // Check if permissions should be skipped
     const skipPermissions = this.reflector.getAllAndOverride<boolean>(
       SKIP_PERMISSIONS_KEY,

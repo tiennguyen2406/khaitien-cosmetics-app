@@ -40,9 +40,19 @@ const buildMongoUriFromEnvUri = (
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const mongoUri = configService.get<string>('MONGO_URI') || '';
+        const database =
+          configService.get<string>('MONGO_DB_NAME') ??
+          configService.get<string>('DB_NAME') ??
+          'cosmetics_db';
+
+        const fullUri = buildMongoUriFromEnvUri(mongoUri, database);
+
+        return {
+          uri: fullUri,
+        };
+      },
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -54,7 +64,7 @@ const buildMongoUriFromEnvUri = (
         const database =
           configService.get<string>('MONGO_DB_NAME') ??
           configService.get<string>('DB_NAME') ??
-          'restaurant';
+          'cosmetics_db';
 
         const fullUri = buildMongoUriFromEnvUri(mongoUri, database);
 
@@ -62,7 +72,6 @@ const buildMongoUriFromEnvUri = (
           type: 'mongodb',
           url: fullUri,
           database,
-          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
           synchronize: !isProduction,
           autoLoadEntities: true,
           logging: isProduction
@@ -80,12 +89,7 @@ const buildMongoUriFromEnvUri = (
 })
 export class DatabaseModule implements OnModuleInit {
   async onModuleInit() {
-    // Đảm bảo kết nối MongoDB khởi tạo xong trước khi chạy các module tiếp theo
-    // Với TypeORM và MongoDB, nếu pool chưa active, truy vấn đầu dễ chậm/timeout
-    console.log('Đang kết nối MongoDB (Mongoose + TypeORM - Mongo) ...');
-    // TypeORM tự động quản lý pool – không cần gọi initialize thủ công nếu sử dụng forRootAsync
-    // Có thể chờ 1 truy vấn dummy để warm-up, hoặc chỉ log status :
-    // Nên chỉ log, không exit process tại đây, vì TypeORM throw error nếu kết nối lỗi lúc startup
+    console.log('Đang kết nối MongoDB (Mongoose + TypeORM) ...');
     console.log('DatabaseModule đã khởi động và kết nối cấu hình xong.');
   }
 }

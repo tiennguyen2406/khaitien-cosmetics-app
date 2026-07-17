@@ -33,13 +33,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
-    response.status(status as number).json({
+    const responseBody: Record<string, any> = {
       statusCode: status as number,
       errorCode: errorCode,
       message: message,
       timestamp: new Date().toISOString(),
       path: request.url,
-    });
+    };
+
+    if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      const resObj = exceptionResponse as Record<string, any>;
+      if (resObj.errors) {
+        responseBody.errors = resObj.errors;
+      }
+    }
+
+    response.status(status as number).json(responseBody);
   }
 
   private getErrorCode(status: HttpStatus): string {

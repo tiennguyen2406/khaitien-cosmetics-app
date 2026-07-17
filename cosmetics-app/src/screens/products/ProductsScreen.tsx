@@ -1,34 +1,79 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { productService, Product } from '../../services/product.service';
+import { cartService } from '../../services/cart.service';
 
-export default function ProductsScreen() {
-  const { t } = useTranslation();
+export default function ProductsScreen({ navigation }: any) {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await productService.getAll();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddToCart = async (product: Product) => {
+    await cartService.addToCart(product);
+    alert('Đã thêm sản phẩm vào giỏ hàng!');
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#D4AF37" />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('products.title')}</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }} edges={['top']}>
+      <ScrollView style={styles.container}>
+      <Text style={styles.title}>Tất cả sản phẩm</Text>
       
-      {[1, 2, 3, 4, 5, 6].map((item) => (
-        <TouchableOpacity key={item} style={styles.productCard}>
-          <View style={styles.productImage}>
-            <Text style={styles.productImageText}>Product {item}</Text>
-          </View>
-          <View style={styles.productInfo}>
-            <Text style={styles.productName}>Sản phẩm mỹ phẩm {item}</Text>
-            <Text style={styles.productDescription}>
-              Mô tả sản phẩm chất lượng cao
-            </Text>
-            <View style={styles.productFooter}>
-              <Text style={styles.productPrice}>$29.99</Text>
-              <TouchableOpacity style={styles.addButton}>
-                <Text style={styles.addButtonText}>+</Text>
-              </TouchableOpacity>
+      {products.length > 0 ? (
+        products.map((product) => (
+          <TouchableOpacity 
+            key={product._id} 
+            style={styles.productCard}
+            onPress={() => navigation.navigate('ProductDetail', { productId: product._id })}
+          >
+            <View style={styles.productImage}>
+              <Text style={styles.productImageText}>Ảnh</Text>
             </View>
-          </View>
-        </TouchableOpacity>
-      ))}
+            <View style={styles.productInfo}>
+              <Text style={styles.productName}>{product.name}</Text>
+              <Text style={styles.productDescription}>
+                {product.description}
+              </Text>
+              <View style={styles.productFooter}>
+                <Text style={styles.productPrice}>${product.price}</Text>
+                <TouchableOpacity 
+                  style={styles.addButton}
+                  onPress={() => handleAddToCart(product)}
+                >
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text style={styles.emptyText}>Chưa có sản phẩm nào</Text>
+      )}
     </ScrollView>
+  </SafeAreaView>
   );
 }
 
@@ -37,6 +82,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -95,5 +146,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
+    padding: 20,
   },
 });

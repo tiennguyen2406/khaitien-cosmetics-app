@@ -1,33 +1,38 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { authService } from '../../services/auth.service';
 
-export default function LoginScreen({ navigation }: any) {
+export default function RegisterScreen({ navigation }: any) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Lỗi', 'Vui lòng nhập email và mật khẩu');
+  const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ thông tin');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Lỗi', 'Mật khẩu xác nhận không khớp');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await authService.login({ email, password });
-      if (response.token) {
-        await AsyncStorage.setItem('@token', response.token);
-        if (response.user) {
-          await AsyncStorage.setItem('@user', JSON.stringify(response.user));
-        }
-        Alert.alert('Thành công', 'Đăng nhập thành công!');
-        navigation.navigate('Main');
-      }
+      const response = await authService.register({ fullName: name, email, password });
+      Alert.alert('Thành công', 'Đăng ký thành công! Vui lòng đăng nhập.');
+      navigation.navigate('Login');
     } catch (error: any) {
-      Alert.alert('Lỗi', error.response?.data?.message || 'Đăng nhập thất bại');
+      Alert.alert('Lỗi', error.response?.data?.message || 'Đăng ký thất bại');
     } finally {
       setLoading(false);
     }
@@ -35,7 +40,15 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Đăng nhập</Text>
+      <Text style={styles.title}>Đăng ký</Text>
+      
+      <TextInput
+        style={styles.input}
+        placeholder="Họ và tên"
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+      />
       
       <TextInput
         style={styles.input}
@@ -54,22 +67,26 @@ export default function LoginScreen({ navigation }: any) {
         secureTextEntry
       />
       
+      <TextInput
+        style={styles.input}
+        placeholder="Xác nhận mật khẩu"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
+      
       <TouchableOpacity 
         style={styles.button} 
-        onPress={handleLogin}
+        onPress={handleRegister}
         disabled={loading}
       >
         <Text style={styles.buttonText}>
-          {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          {loading ? 'Đang đăng ký...' : 'Đăng ký'}
         </Text>
       </TouchableOpacity>
       
-      <TouchableOpacity onPress={() => Alert.alert('Tính năng', 'Chưa triển khai')}>
-        <Text style={styles.link}>Quên mật khẩu?</Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.link}>Chưa có tài khoản? Đăng ký ngay</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.link}>Đã có tài khoản? Đăng nhập ngay</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

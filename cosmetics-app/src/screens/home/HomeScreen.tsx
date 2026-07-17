@@ -1,61 +1,109 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { productService, Product } from '../../services/product.service';
 
 export default function HomeScreen({ navigation }: any) {
-  const { t } = useTranslation();
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [newProducts, setNewProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const [featured, all] = await Promise.all([
+        productService.getFeatured(),
+        productService.getAll(),
+      ]);
+      setFeaturedProducts(featured);
+      // Take last 3 products as "new" products
+      setNewProducts(all.slice(-3));
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#D4AF37" />
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('common.welcome')}</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#D4AF37' }} edges={['top']}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+        <Text style={styles.headerTitle}>Xin chào!</Text>
         <Text style={styles.headerSubtitle}>Cosmetics App</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('home.featuredProducts')}</Text>
+        <Text style={styles.sectionTitle}>Sản phẩm nổi bật</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {[1, 2, 3, 4].map((item) => (
-            <TouchableOpacity 
-              key={item} 
-              style={styles.productCard}
-              onPress={() => navigation.navigate('Products')}
-            >
-              <View style={styles.productImage}>
-                <Text style={styles.productImageText}>Product {item}</Text>
-              </View>
-              <Text style={styles.productName}>Sản phẩm {item}</Text>
-              <Text style={styles.productPrice}>$29.99</Text>
-            </TouchableOpacity>
-          ))}
+          {featuredProducts.length > 0 ? (
+            featuredProducts.map((product) => (
+              <TouchableOpacity 
+                key={product._id} 
+                style={styles.productCard}
+                onPress={() => navigation.navigate('ProductDetail', { productId: product._id })}
+              >
+                <View style={styles.productImage}>
+                  <Text style={styles.productImageText}>Ảnh</Text>
+                </View>
+                <Text style={styles.productName}>{product.name}</Text>
+                <Text style={styles.productPrice}>${product.price}</Text>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.emptyText}>Chưa có sản phẩm nổi bật</Text>
+          )}
         </ScrollView>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('home.newArrivals')}</Text>
-        {[1, 2, 3].map((item) => (
-          <TouchableOpacity 
-            key={item} 
-            style={styles.productRow}
-            onPress={() => navigation.navigate('Products')}
-          >
-            <View style={styles.productRowImage}>
-              <Text style={styles.productImageText}>New {item}</Text>
-            </View>
-            <View style={styles.productRowInfo}>
-              <Text style={styles.productName}>Sản phẩm mới {item}</Text>
-              <Text style={styles.productPrice}>$39.99</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+        <Text style={styles.sectionTitle}>Sản phẩm mới</Text>
+        {newProducts.length > 0 ? (
+          newProducts.map((product) => (
+            <TouchableOpacity 
+              key={product._id} 
+              style={styles.productRow}
+              onPress={() => navigation.navigate('ProductDetail', { productId: product._id })}
+            >
+              <View style={styles.productRowImage}>
+                <Text style={styles.productImageText}>Ảnh</Text>
+              </View>
+              <View style={styles.productRowInfo}>
+                <Text style={styles.productName}>{product.name}</Text>
+                <Text style={styles.productPrice}>${product.price}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>Chưa có sản phẩm mới</Text>
+        )}
       </View>
     </ScrollView>
+  </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#fff',
   },
   header: {
@@ -127,5 +175,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
+    padding: 20,
   },
 });
