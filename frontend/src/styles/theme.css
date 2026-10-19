@@ -1,0 +1,115 @@
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Luxury Cosmetics Color Tokens */
+  --color-primary: #C98A60;         /* Rose Gold Luxury */
+  --color-primary-hover: #B4784E;
+  --color-primary-light: #F7EFE9;
+  --color-accent: #D4AF37;          /* Champagne Gold */
+  
+  --color-bg-main: #FAF8F5;         /* Warm Nude Canvas */
+  --color-bg-card: #FFFFFF;
+  --color-text-main: #1C1917;       /* Obsidian Warm Black */
+  --color-text-muted: #78716C;      /* Warm Stone Gray */
+  --color-border: #E7E5E4;
+  --color-border-hover: #D6D3D1;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-luxury: 0 12px 32px -8px rgba(180, 120, 78, 0.12);
+  --shadow-luxury-hover: 0 20px 40px -12px rgba(180, 120, 78, 0.22);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-main);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(231, 229, 228, 0.8);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(231, 229, 228, 0.7);
+  box-shadow: var(--shadow-luxury);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-luxury-hover);
+  border-color: rgba(201, 138, 96, 0.4);
+}
+
+/* Luxury button */
+.btn-luxury-primary {
+  background: linear-gradient(135deg, #D4A373 0%, #C98A60 100%);
+  color: #FFFFFF !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.65rem 1.4rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(201, 138, 96, 0.3);
+}
+
+.btn-luxury-primary:hover {
+  background: linear-gradient(135deg, #C98A60 0%, #B4784E 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(201, 138, 96, 0.4);
+}
+
+.btn-luxury-outline {
+  background: transparent;
+  color: #1C1917 !important;
+  border: 1px solid #D6D3D1;
+  border-radius: 9999px;
+  padding: 0.65rem 1.4rem;
+  transition: all 0.2s ease;
+}
+
+.btn-luxury-outline:hover {
+  border-color: #C98A60;
+  color: #C98A60 !important;
+  background: rgba(247, 239, 233, 0.5);
+}
+
+/* Badge styling */
+.badge-luxury-sale {
+  background: linear-gradient(135deg, #EF4444 0%, #E11D48 100%);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.badge-luxury-deal {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+}
