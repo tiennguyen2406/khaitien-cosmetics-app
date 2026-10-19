@@ -1,0 +1,132 @@
+.favorite-products-container {
+  display: flex;
+  min-height: 80vh;
+  background: #f5f4f8;
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.sidebar {
+  width: 250px;
+  background: #fff;
+  border-right: 1px solid #eee;
+  padding: 24px;
+}
+
+.sidebar .profile {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sidebar .profile .avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #eee;
+  margin: 0 auto;
+}
+
+.sidebar .profile .name {
+  font-weight: bold;
+  color: #388e3c;
+  margin-top: 8px;
+}
+
+.sidebar .profile .edit {
+  color: #888;
+  font-size: 14px;
+}
+
+.sidebar .menu-item {
+  padding: 10px 0 10px 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar .menu-item:hover {
+  background: #f7f7f7;
+}
+
+.sidebar .menu-item.active {
+  color: #ff6600;
+  font-weight: bold;
+  background: #f7f7f7;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
+
+.main-content h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 16px;
+  width: 220px; /* Đảm bảo chiều rộng cố định */
+    height:350px; /* Đảm bảo chiều cao cố định */
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column; /* Sắp xếp các phần tử theo chiều dọc */
+  justify-content: space-between; /* Giãn cách đều các phần tử */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+  width: 100%;
+  height: 150px; /* Tăng chiều cao để ảnh không bị cắt */
+  object-fit: cover; /* Đảm bảo ảnh vừa khung mà không bị méo */
+  border-radius: 8px;
+}
+
+.product-card h4 {
+  font-size: 16px;
+  margin: 10px 0;
+  padding-bottom: 50px;
+  color: #333;
+  text-align: center; /* Căn giữa tên sản phẩm */
+  white-space: normal; /* Cho phép xuống dòng nếu tên quá dài */
+  word-wrap: break-word; /* Tự động xuống dòng nếu từ quá dài */
+}
+
+.product-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 5px 0;
+  text-align: center; /* Căn giữa giá sản phẩm */
+}
+
+.product-card button {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: center; /* Căn giữa nút trong thẻ sản phẩm */
+}
+
+.product-card button:hover {
+  background: #d9363e;
+}

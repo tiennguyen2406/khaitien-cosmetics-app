@@ -1,0 +1,20 @@
+# Khi clone project về máy mới, chỉ cần chạy:
+npm install
+
+# Cài đặt React Bootstrap
+npm install react-bootstrap bootstrap
+
+# Cài đặt React Icons
+npm install react-icons
+
+# Cài đặt React Simple Captcha
+npm install react-simple-captcha
+
+# Cài đặt React Router DOM
+npm install react-router-dom
+
+#Lệnh để mở project
+npm run dev
+
+#lệnh chạy jsonserver:
+json-server --watch db.json --port 3000

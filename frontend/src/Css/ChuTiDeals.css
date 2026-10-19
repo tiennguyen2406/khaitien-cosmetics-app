@@ -1,0 +1,46 @@
+/* Style riêng cho sản phẩm ở ChuTiDeals */
+.chutideals-products-wrapper {
+    max-width: 1300px !important;
+    margin: 0 auto;
+  }
+
+.chutideals-products-wrapper .products-section {
+  background: #fff0f6;
+  border-radius: 16px;
+  padding: 24px 12px;
+}
+
+.chutideals-products-wrapper .product-card {
+  border: 2px solid #198754;
+  box-shadow: 0 4px 16px #ff217122;
+}
+
+.chutideals-products-wrapper .section-title {
+  color: #198754;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.chutideals-products-wrapper .products-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr); /* 6 sản phẩm/hàng */
+  gap: 20px;
+}
+
+.chutideals-products-wrapper .product-card {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.chutideals-products-wrapper .products-grid > .col,
+.chutideals-products-wrapper .products-grid > [class*="col-"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: unset !important;
+  min-width: 0 !important;
+  margin-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+} 
+

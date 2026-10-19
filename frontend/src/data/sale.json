@@ -1,0 +1,29 @@
+[
+    {
+      "code": "SALE10",
+      "discount": 10,
+      "description": "Giảm 10% tổng giá trị đơn hàng",
+      "minOrder": 100000,
+      "maxDiscount": 100000,
+      "expiryDate": "2025-12-31",
+      "isActive": true
+    },
+    {
+      "code": "SALE20",
+      "discount": 20,
+      "description": "Giảm 20% tổng giá trị đơn hàng",
+      "minOrder": 200000,
+      "maxDiscount": 200000, 
+      "expiryDate": "2025-12-31",
+      "isActive": true
+    },
+    {
+      "code": "NEWUSER",
+      "discount": 15,
+      "description": "Giảm 15% cho khách hàng mới",
+      "minOrder": 0,
+      "maxDiscount": 150000,
+      "expiryDate": "2025-12-31",
+      "isActive": true
+    }
+  ]

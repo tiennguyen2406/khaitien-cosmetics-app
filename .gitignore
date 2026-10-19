@@ -1,0 +1,48 @@
+# Documentation (local only, do not commit)
+docs/
+*.md
+
+# Dependencies
+node_modules/
+*/node_modules/
+.pnp
+.pnp.js
+
+# Environment variables
+.env
+.env.*
+*.env
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production & Build outputs
+dist/
+build/
+.next/
+web-build/
+*.tsbuildinfo
+
+# Database & Volume persistence
+mongo-data/
+*.sqlite
+*.db
+
+# OS & Shortcuts
+.DS_Store
+Thumbs.db
+*.lnk
+
+# IDE & Editors
+.vscode/
+.idea/
+
+# Mobile Expo
+.expo/
+/ios
+/android

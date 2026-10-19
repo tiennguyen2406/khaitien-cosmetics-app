@@ -1,0 +1,26 @@
+.hot-deal-container {
+  padding: 20px;
+}
+
+.banner-list {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.banner-item img {
+  transition: transform 0.3s;
+}
+
+.banner-item:hover img {
+  transform: scale(1.05);
+}
+
+.chi-tiet-hot-deal-container {
+  padding: 20px;
+}
+
+.banner-detail img {
+  max-width: 100%;
+  border-radius: 8px;
+}
