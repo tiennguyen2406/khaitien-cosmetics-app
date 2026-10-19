@@ -1,15 +1,5 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 import localDb from "../data/db.json";
-
-const API_BASE_URL = "http://localhost:8010/v1";
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 4000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
 
 export const productService = {
   // Lấy tất cả sản phẩm (với fallback offline)

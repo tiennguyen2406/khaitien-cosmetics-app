@@ -1,14 +1,4 @@
-import axios from "axios";
-
-const API_BASE_URL = "http://localhost:8010/v1";
-
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import apiClient from "./apiClient";
 
 export const OrderService = {
   // Lưu đơn hàng mới
