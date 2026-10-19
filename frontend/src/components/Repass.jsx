@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Alert } from "react-bootstrap";
-import {
-  loadCaptchaEnginge,
-  LoadCanvasTemplateNoReload,
-  validateCaptcha,
-} from "react-simple-captcha";
+import { FiRefreshCw } from "react-icons/fi";
+
+const generateRandomCaptcha = (length = 6) => {
+  const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
 
 const Repass = ({ show, handleClose }) => {
-  console.log("Repass modal show status:", show);
-
+  const [captchaCode, setCaptchaCode] = useState("");
   const [formData, setFormData] = useState({
     identifier: "",
     captcha: "",
@@ -22,10 +26,13 @@ const Repass = ({ show, handleClose }) => {
 
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Khởi tạo captcha khi component mount và khi modal được mở
+  const refreshCaptcha = () => {
+    setCaptchaCode(generateRandomCaptcha(6));
+  };
+
   useEffect(() => {
     if (show) {
-      loadCaptchaEnginge(6); // Tạo captcha 6 ký tự
+      refreshCaptcha();
       setShowSuccess(false);
       setFormData({ identifier: "", captcha: "" });
       setError({ identifier: "", captcha: "", general: "" });
@@ -34,59 +41,49 @@ const Repass = ({ show, handleClose }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
-    setError({
-      ...error,
+    }));
+    setError((prev) => ({
+      ...prev,
       [name]: "",
       general: "",
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.identifier) {
-      setError({
-        ...error,
+    if (!formData.identifier.trim()) {
+      setError((prev) => ({
+        ...prev,
         identifier: "Vui lòng nhập email hoặc số điện thoại",
-      });
+      }));
       return;
     }
 
-    if (!formData.captcha) {
-      setError({
-        ...error,
+    if (!formData.captcha.trim()) {
+      setError((prev) => ({
+        ...prev,
         captcha: "Vui lòng nhập mã captcha",
-      });
+      }));
       return;
     }
 
-    if (!validateCaptcha(formData.captcha)) {
-      setError({
-        ...error,
+    if (formData.captcha.trim().toLowerCase() !== captchaCode.toLowerCase()) {
+      setError((prev) => ({
+        ...prev,
         captcha: "Mã captcha không đúng",
-      });
+      }));
+      refreshCaptcha();
       return;
     }
 
-    // Hiển thị thông báo thành công
     setShowSuccess(true);
-
-    // Đóng modal sau 2 giây
     setTimeout(() => {
       handleClose();
     }, 2000);
-  };
-
-  const handleShowRepass = (e) => {
-    e.preventDefault();
-    console.log("Clicking forgot password link");
-    handleClose();
-    console.log("Setting showRepass to true");
-    setShowRepass(true);
   };
 
   return (
@@ -98,18 +95,18 @@ const Repass = ({ show, handleClose }) => {
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Quên mật khẩu tài khoản</Modal.Title>
+        <Modal.Title className="text-lg font-bold">Quên mật khẩu tài khoản</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {showSuccess && (
-          <Alert variant="success" className="mb-3">
+          <Alert variant="success" className="mb-3 text-sm">
             Đã gửi link đặt lại mật khẩu vào email/số điện thoại của bạn!
           </Alert>
         )}
 
-        <p className="text-muted">
+        <p className="text-muted text-sm mb-3">
           Nhập địa chỉ email hoặc số điện thoại của bạn dưới đây và hệ thống sẽ
-          gửi cho bạn một liên kết để đặt lại mật khẩu của bạn
+          gửi cho bạn một liên kết để đặt lại mật khẩu của bạn.
         </p>
 
         <Form onSubmit={handleSubmit}>
@@ -128,32 +125,29 @@ const Repass = ({ show, handleClose }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <div className="d-flex align-items-center gap-2 mb-2">
+            <div className="d-flex align-items-center gap-3 mb-2">
               <div
                 style={{
-                  border: "1px solid #dee2e6",
-                  borderRadius: "4px",
-                  padding: "8px",
-                  display: "inline-block",
+                  letterSpacing: "6px",
+                  userSelect: "none",
+                  fontFamily: "monospace",
+                  transform: "skewX(-10deg)",
                 }}
+                className="bg-stone-100 border border-stone-300 rounded px-4 py-2 font-black text-rose-800 text-lg shadow-inner inline-block"
               >
-                <LoadCanvasTemplateNoReload />
+                {captchaCode}
               </div>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  loadCaptchaEnginge(6);
-                }}
-                className="text-decoration-none text-success"
-                style={{ whiteSpace: "nowrap" }}
+              <button
+                type="button"
+                onClick={refreshCaptcha}
+                className="text-xs text-rose-700 hover:text-rose-900 flex items-center gap-1 font-semibold border-none bg-transparent"
               >
-                Reload Captcha
-              </a>
+                <FiRefreshCw className="inline" /> Đổi mã khác
+              </button>
             </div>
             <Form.Control
               type="text"
-              placeholder="Nhập mã captcha"
+              placeholder="Nhập mã captcha phía trên"
               name="captcha"
               value={formData.captcha}
               onChange={handleChange}
@@ -164,8 +158,11 @@ const Repass = ({ show, handleClose }) => {
             )}
           </Form.Group>
 
-          <Button variant="success" type="submit" className="w-100">
-            Gửi
+          <Button
+            type="submit"
+            className="w-100 py-2.5 rounded-xl font-bold bg-[#842c3d] hover:bg-[#6c2432] border-none text-white shadow"
+          >
+            Gửi yêu cầu
           </Button>
         </Form>
       </Modal.Body>

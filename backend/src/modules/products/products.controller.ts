@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -32,8 +33,8 @@ export class ProductsController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Lấy danh sách tất cả sản phẩm' })
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() query: any) {
+    return this.productsService.findAll(query);
   }
 
   @Get('featured')

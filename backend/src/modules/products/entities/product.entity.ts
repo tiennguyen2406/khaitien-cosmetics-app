@@ -3,8 +3,11 @@ import { Document } from 'mongoose';
 
 export type ProductDocument = Product & Document;
 
-@Schema({ timestamps: true })
+@Schema({ strict: false, timestamps: true })
 export class Product {
+  @Prop({ required: false })
+  sku?: string;
+
   @Prop({ required: true })
   name: string;
 
@@ -13,6 +16,18 @@ export class Product {
 
   @Prop({ required: true })
   price: number;
+
+  @Prop({ required: false, default: 0 })
+  originalPrice?: number;
+
+  @Prop({ required: false, default: 0 })
+  discount?: number;
+
+  @Prop({ required: false })
+  brand?: string;
+
+  @Prop({ required: false })
+  image?: string;
 
   @Prop({ required: true, type: [String] })
   images: string[];
@@ -26,6 +41,9 @@ export class Product {
   @Prop({ default: false })
   featured: boolean;
 
+  @Prop({ default: false })
+  isHotDeal?: boolean;
+
   @Prop({ default: 0 })
   rating: number;
 
@@ -33,7 +51,19 @@ export class Product {
   reviews: number;
 
   @Prop({ default: 0 })
-  stock: number;
+  soldCount?: number;
+
+  @Prop({ default: 100 })
+  totalCount?: number;
+
+  @Prop({ default: 0 })
+  likeCount?: number;
+
+  @Prop({ type: [String], default: [] })
+  types?: string[];
+
+  @Prop({ type: [String], default: [] })
+  ingredients?: string[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
