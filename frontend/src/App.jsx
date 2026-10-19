@@ -34,6 +34,7 @@ import Vanchuyen from "./pages/Vanchuyen";
 import Chinhsachdoitra from "./pages/Chinhsachdoitra";
 import ChiTietHotDeal from "./pages/ChiTietHotDeal";
 import ChiTietDanhMuc from "./pages/ChiTietDanhMuc";
+import AIAgentChatModal from "./components/AIAgentChatModal";
 
 function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
@@ -94,6 +95,7 @@ function AppContent() {
         onForgotPassword={handleShowRepass}
       />
       <Repass show={showRepass} handleClose={handleCloseRepass} />
+      <AIAgentChatModal />
       <Footer />
     </div>
   );

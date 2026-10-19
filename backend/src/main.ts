@@ -53,15 +53,24 @@ async function bootstrap() {
 
     // CORS configuration
     app.enableCors({
-      origin: ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : true,
+      origin: [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+        'http://localhost:8010',
+      ],
       credentials: true,
-      methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
+      methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: [
         'Content-Type',
         'Authorization',
         'X-API-Key',
         'X-Webhook-Signature',
+        'x-correlation-id',
+        'X-Requested-With',
+        'Accept',
       ],
+      exposedHeaders: ['x-correlation-id'],
     });
 
     // Logging

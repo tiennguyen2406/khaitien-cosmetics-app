@@ -23,9 +23,11 @@ import googleConfig from './config/google.config';
 import mailerConfig from './config/mailer.config';
 import { UsersModule } from './modules/users/users.module';
 import { ServicePackageModule } from './modules/service-package/service-package.module';
-import { PermissionsModule } from './modules/permissions/permissions.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { PermissionsModule } from './modules/permissions/permissions.module';
 import { ProductsModule } from './modules/products/products.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { AiModule } from './modules/ai/ai.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from './modules/permissions/guards/permissions.guard';
@@ -71,6 +73,8 @@ import { PermissionsGuard } from './modules/permissions/guards/permissions.guard
     BlogModule,
     ServicePackageModule,
     ProductsModule,
+    OrdersModule,
+    AiModule,
   ],
   providers: [
     {
