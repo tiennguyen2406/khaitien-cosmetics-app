@@ -33,10 +33,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
+    const correlationId = request['correlationId'] || request.headers['x-correlation-id'] || 'N/A';
+
     const responseBody: Record<string, any> = {
       statusCode: status as number,
       errorCode: errorCode,
       message: message,
+      correlationId: correlationId,
       timestamp: new Date().toISOString(),
       path: request.url,
     };

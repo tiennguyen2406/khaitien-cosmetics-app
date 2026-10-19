@@ -23,7 +23,8 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         const responseTime = Date.now() - startTime;
-        const message = `${method} ${url} - ${responseTime}ms`;
+        const correlationId = req['correlationId'] || req.headers['x-correlation-id'] || 'N/A';
+        const message = `[${correlationId}] ${method} ${url} - ${responseTime}ms`;
 
         // if waste time > 500ms, log warning
         if (responseTime > 500) {
